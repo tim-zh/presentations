@@ -1,46 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>presentation</title>
+	<title>presentation</title>
 
-  <meta charset="utf-8">
-  <link rel="stylesheet" media="screen" href="assets/stylesheets/reveal.css">
-  <link rel="stylesheet" media="screen" href="assets/stylesheets/white-theme.css">
-  <link rel="stylesheet" media="screen" href="assets/stylesheets/ir black.css">
-  <script src="assets/javascripts/ws.js" type="text/javascript"></script>
-  <script src="assets/javascripts/reveal.js" type="text/javascript"></script>
-  <script src="assets/javascripts/highlight.pack.js" type="text/javascript"></script>
-  <style>
-    .reveal section img {
-      border: none;
-    }
+	<meta charset="utf-8">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/reveal.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/white-theme.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/ir-black.css">
+	<script src="../common-assets/javascripts/reveal.js" type="text/javascript"></script>
+	<script src="../common-assets/javascripts/highlight.pack.js" type="text/javascript"></script>
+	<style>
+		.reveal section img { border: none; }
 
-    sub, sup {
-      font-size: 70% !important;
-    }
+		sub, sup { font-size: 70% !important; }
 
-    .reveal section img {
-      box-shadow: none;
-    }
-  </style>
+		.reveal section img { box-shadow: none; }
+	</style>
 </head>
 <body>
 
 
 <div class="reveal">
 
-  <div class="slides">
-    <section>
-      <h1>MongoDB overview</h1>
-    </section>
+	<div class="slides">
+		<section>
+			<h1>MongoDB overview</h1>
+		</section>
 
-    <section>
-      <img src="assets/images/00">
-      <p>nosql, document-oriented, fast, eventually consistent, web scale</p>
-    </section>
+		<section>
+			<img src="images/00">
+			<p>nosql, document-oriented, fast, eventually consistent, web scale</p>
+		</section>
 
-    <section>
-      <h3>collection of documents</h3>
+		<section>
+			<h3>collection of documents</h3>
       <pre><code>[{
   item: "A",
   details: {
@@ -57,11 +50,11 @@
   stock: [ { size: "S", qty: 25 }, { size: "M", qty: 50 } ],
   category: "clothing"
 }]</code></pre>
-      <p class="fragment fade-in">bson, dynamic schema, field names are stored</p>
-    </section>
+			<p class="fragment fade-in">bson, dynamic schema, field names are stored</p>
+		</section>
 
-    <section>
-      <h3>queries</h3>
+		<section>
+			<h3>queries</h3>
       <pre><code class="js">for (var i = 0, xs = db.getCollectionNames(), l = xs.length, i < l; ++i) {
   print(xs[i]);
   printjson(db.getSiblingDB(xs[i]).collectionName.find({
@@ -73,10 +66,10 @@
     }
   }, {name: 1, _id: 0}));
 }</code></pre>
-    </section>
+		</section>
 
-    <section>
-      <h3>omg queries</h3>
+		<section>
+			<h3>omg queries</h3>
       <pre><code class="js">db.items.udpate({
   $or: [
     { size: { $gt: 10 } },
@@ -86,122 +79,124 @@
   $set: { type: "T" },
   $currentDate: { modified: true }
 })</code></pre>
-    </section>
+		</section>
 
-    <section>
-      <h3>aggregation</h3>
-      <img src="assets/images/01">
-    </section>
+		<section>
+			<h3>aggregation</h3>
+			<img src="images/01">
+		</section>
 
-    <section>
-      <h3>map reduce</h3>
-      <img src="assets/images/02">
-    </section>
+		<section>
+			<h3>map reduce</h3>
+			<img src="images/02">
+		</section>
 
-    <section>
-      <h3>benchmarks</h3>
-      <img src="assets/images/03" class="fragment fade-in">
-    </section>
+		<section>
+			<h3>benchmarks</h3>
+			<img src="images/03" class="fragment fade-in">
+		</section>
 
-    <section>
-      <img src="assets/images/04">
-    </section>
+		<section>
+			<img src="images/04">
+		</section>
 
-    <section>
-      <img src="assets/images/05">
-    </section>
+		<section>
+			<img src="images/05">
+		</section>
 
-    <section>
-      <h3>price of speed</h3>
-    </section>
+		<section>
+			<h3>price of speed</h3>
+		</section>
 
-    <section>
-      <h3>Joins</h3>
-      <p style="font-size: 200%" class="fragment fade-in">no joins</p>
-      <p class="fragment fade-in">16mb document size</p>
-    </section>
+		<section>
+			<h3>Joins</h3>
 
-    <section>
-      <h3>Transactions</h3>
-      <p style="font-size: 200%" class="fragment fade-in">no transactions</p>
-      <p class="fragment fade-in">:P</p>
-    </section>
+			<p style="font-size: 200%" class="fragment fade-in">no joins</p>
+			<p class="fragment fade-in">16mb document size</p>
+		</section>
 
-    <section>
-      <ul>
-        <li>atomicity<small>*</small></li>
-        <li>consistency</li>
-        <li>isolation<small>**</small></li>
-        <li>durability</li>
-      </ul>
-      <p style="font-size: 30%">*doc level only</p>
-      <p style="font-size: 30%">**isolated update, read snapshot</p>
-    </section>
+		<section>
+			<h3>Transactions</h3>
 
-    <section>
-      <h3>Distributed cluster, eventual consistency</h3>
-      <ul>
-        <li class="fragment fade-in">sharding
-          <ul class="fragment fade-in">
-            <li>shard key field</li>
-            <li>balancing</li>
-          </ul>
-        </li>
-        <li class="fragment fade-in">replication
-          <ul class="fragment fade-in">
-            <li>write concern</li>
-            <li>read preference</li>
-          </ul>
-        </li>
-      </ul>
-    </section>
+			<p style="font-size: 200%" class="fragment fade-in">no transactions</p>
+			<p class="fragment fade-in">:P</p>
+		</section>
 
-    <section>
-      <h3>good parts</h3>
-      <ul>
-        <li>documentation</li>
-		<div class="fragment fade-in">
-        <li>simplicity</li>
-        <li>dynamic schema</li>
-        <li>js interoperability</li>
-		</div>
-      </ul>
-    </section>
+		<section>
+			<ul>
+				<li>atomicity<small>*</small></li>
+				<li>consistency</li>
+				<li>isolation<small>**</small></li>
+				<li>durability</li>
+			</ul>
+			<p style="font-size: 30%">*doc level only</p>
+			<p style="font-size: 30%">**isolated update, read snapshot</p>
+		</section>
 
-    <section>
-      <p>thank you</p>
-    </section>
+		<section>
+			<h3>Distributed cluster, eventual consistency</h3>
+			<ul>
+				<li class="fragment fade-in">sharding
+					<ul class="fragment fade-in">
+						<li>shard key field</li>
+						<li>balancing</li>
+					</ul>
+				</li>
+				<li class="fragment fade-in">replication
+					<ul class="fragment fade-in">
+						<li>write concern</li>
+						<li>read preference</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
 
-    <section>
-      <h1>bonus</h1>
-    </section>
+		<section>
+			<h3>good parts</h3>
+			<ul>
+				<li>documentation</li>
+				<div class="fragment fade-in">
+					<li>simplicity</li>
+					<li>dynamic schema</li>
+					<li>js interoperability</li>
+				</div>
+			</ul>
+		</section>
 
-    <section>
-      <h1>Elasticsearch overview</h1>
-    </section>
+		<section>
+			<p>thank you</p>
+		</section>
 
-    <section>
-      <h3>full-text search server</h3>
-      <p>Lucene > Solr > Elasticsearch</p>
-    </section>
+		<section>
+			<h1>bonus</h1>
+		</section>
 
-    <section>
-      <ul>
-        <li>easy to deploy</li>
-        <li>sharding, replication</li>
-      </ul>
-    </section>
+		<section>
+			<h1>Elasticsearch overview</h1>
+		</section>
 
-    <section>
-      <ul>
-        <li>REST</li>
-        <li>JSON</li>
-        <li>index/type/document</li>
-      </ul>
-    </section>
+		<section>
+			<h3>full-text search server</h3>
+			<p>Lucene > Solr > Elasticsearch</p>
+		</section>
 
-    <section>
-      <h3>example</h3>
+		<section>
+			<ul>
+				<li>easy to deploy</li>
+				<li>sharding, replication</li>
+			</ul>
+		</section>
+
+		<section>
+			<ul>
+				<li>REST</li>
+				<li>JSON</li>
+				<li>index/type/document</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>example</h3>
       <pre><code>curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
 {
   "query": {
@@ -218,119 +213,46 @@
     }
   }
 }'</code></pre>
-    </section>
+		</section>
 
-    <section>
-      <h3>features/plugins</h3>
-      <ul>
-        <li>sql and other apis</li>
-        <li>language processing</li>
-        <li>xml, pdf, docx...</li>
-        <li>result clustering</li>
-        <li>geo location search</li>
-      </ul>
-    </section>
+		<section>
+			<h3>features/plugins</h3>
+			<ul>
+				<li>sql and other apis</li>
+				<li>language processing</li>
+				<li>xml, pdf, docx...</li>
+				<li>result clustering</li>
+				<li>geo location search</li>
+			</ul>
+		</section>
 
-    <section>
-      <p>thank you</p>
-    </section>
+		<section>
+			<p>thank you</p>
+		</section>
 
-    <!--
-    image
-
-    <section>
-      <h3></h3>
-      <img src="assets/images/0">
-    </section>
-
-    list
-
-    <section>
-      <h3></h3>
-      <ul>
-        <li></li>
-      </ul>
-    </section>
-
-    text
-
-    <section>
-      <h3></h3>
-      <p></p>
-    </section>
-
-    code
-
-    <section>
-      <h3></h3>
-      <pre><code></code></pre>
-    </section>
-    -->
-  </div>
+	</div>
 
 </div>
 
 <script>
-      // Full list of configuration options available at:
-      // https://github.com/hakimel/reveal.js#configuration
-      var enableKeyboard = false;
-      Reveal.initialize({
-          controls: false,
-          keyboard: true,
-          progress: true,
-          history: true,
-          center: true,
-          width: 1260,
-          height: 900,
-          minScale: 1,
-          maxScale: 1,
+	// Full list of configuration options available at:
+	// https://github.com/hakimel/reveal.js#configuration
+	var enableKeyboard = false;
+	Reveal.initialize({
+		controls: false,
+		keyboard: true,
+		progress: true,
+		history: true,
+		center: true,
+		width: 1260,
+		height: 900,
+		minScale: 1,
+		maxScale: 1,
 
-          transition: 'slide' // none/fade/slide/convex/concave/zoom
-      });
+		transition: 'slide' // none/fade/slide/convex/concave/zoom
+	});
 
-      var markDiv;
-      var setMark = function(x1, y1, x2, y2) {
-        if (!markDiv) {
-          markDiv = document.createElement("div");
-          document.body.appendChild(markDiv);
-          markDiv.style.position = "absolute";
-          markDiv.style.zIndex = 100;
-        }
-        markDiv.style.border = "#f55f5f solid 2px";
-        markDiv.style.left = x1 + "px";
-        markDiv.style.top = y1 + "px";
-        markDiv.style.width = (x2 - x1) + "px";
-        markDiv.style.height = (y2 - y1) + "px";
-      };
-      var clearMark = function() {
-        markDiv.style.border = "transparent";
-      };
-
-
-          connect("socket", function(message) {
-              var msg = JSON.parse(message.data);
-
-              if (msg.dir) {
-                  if (msg.dir == "left")
-                      Reveal.left();
-                  else
-                      Reveal.right();
-              }
-              if (msg.mark) {
-                  if (msg.mark == "clear")
-                      clearMark();
-                  else if (msg.mark == "set")
-                      setMark(
-                          msg.x1 + document.body.clientWidth / 2,
-                          msg.y1 + document.body.clientHeight / 2,
-                          msg.x2 + document.body.clientWidth / 2,
-                          msg.y2 + document.body.clientHeight / 2);
-              }
-          });
-
-
-      hljs.initHighlightingOnLoad();
-
+	hljs.initHighlightingOnLoad();
 </script>
 
 </body>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>presentation</title>
+
+	<meta charset="utf-8">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/reveal.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/night-theme.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/ir-black.css">
+	<script src="../common-assets/javascripts/reveal.js" type="text/javascript"></script>
+	<script src="../common-assets/javascripts/highlight.pack.js" type="text/javascript"></script>
+	<style>
+		.reveal section img { border: none; }
+
+		sub, sup { font-size: 70% !important; }
+
+		.reveal section img { box-shadow: none; }
+	</style>
+</head>
+<body>
+
+
+<div class="reveal">
+
+	<div class="slides">
+		<section>
+			<h1>Scala. Functional programming</h1>
+		</section>
+
+		<section>
+			<h3>Common syntax</h3>
+<pre><code>object HelloWorld extends App {
+
+  println("hello, world")
+
+  var v =  1 + 1 == 1.+(1)
+
+  def m(s: String, i: Int): Unit = {
+    for (j <- 1 to i)
+      println(s)
+  }
+}</code></pre>
+		</section>
+
+		<section>
+<pre><code>private[pack] class C private(l: Long) {
+  def m(i: Int) = {
+    val v =
+      if (i % 2 == 0)
+        "a"
+      else
+        "b"
+    v
+  }
+
+  def m2(i: Int) = if (i % 2 == 0) "a" else "b"
+}</code></pre>
+		</section>
+
+		<section>
+<pre><code>trait T1 {
+  val v = 1
+}
+
+trait T2 { self: T1 =>
+  def m() = v
+}
+
+class C extends T2 with T1
+
+...
+
+type T = CC with T3
+val d: T = null
+val c: d.type = new CC with T3 with T4</code></pre>
+		</section>
+
+		<section>
+<pre><code class="scala">trait F1[-I, +O] {
+  def apply(p: I): O
+}
+
+...
+
+val f: F1[String, AnyRef] = new F1[AnyRef, String] {
+  def apply(p: AnyRef): String = p.toString
+}</code></pre>
+		</section>
+
+		<section>
+<pre><code class="scala">class C {
+import scala.{Float, Long => L}
+
+  def m() = {
+    import scala.collection.JavaConversions._
+
+    def subM() {...}
+
+    subM()
+  }
+}</code></pre>
+		</section>
+
+		<section>
+			<h3>Convenience</h3>
+			<ul>
+				<li>Type inference (duck typing)</li>
+				<li>REPL</li>
+				<li>Java interoperability</li>
+			</ul>
+<pre><code class="scala">class C(var i: Int)
+
+class C(private var _i: Int) {
+  def i = _i
+  def i_=(in: Int) = { _i = in }
+}
+
+case class C(i: Int)
+
+object C {
+  def apply(i: Int) = new C(i)
+}
+
+Seq(1, 2, 3); Map(1 -> "1")</code></pre>
+		</section>
+
+		<section>
+<pre><code class="scala">val (a, b) = (1, "!")
+
+val str = s"1 + 1 is ${a + a} (sic$b)" //1 + 1 is 2 (sic!)
+
+def m(s: String, b: Boolean, i: Int = 1, c: MyC = new MyC) = {}
+
+m(b = true, s = "a")
+
+def myWhile(b: => Boolean)(f: => Unit): Unit =
+  if (b) {
+    f
+    myWhile(b)(f)
+  }
+
+myWhile(...) {
+  ...
+}</code></pre>
+		</section>
+
+		<section>
+			<h3>Functional programming</h3>
+			<p>functions as first class objects</p>
+<pre><code class="scala">val v = (i: Int) => {...}
+
+def m(i: Int, j: Int) = (k: Int) => i + j + k //(k: Int) => i + j + _
+
+val r = m(1, _)
+
+r(2)(3)</code></pre>
+		</section>
+
+		<section>
+			<h3>Function composition and monads</h3>
+			<ul>
+				<li>Option</li>
+				<li>Try</li>
+				<li>IO</li>
+				<li>...</li>
+			</ul>
+<pre><code class="scala">val f = (i: Int) => i + "!"
+val g = f.andThen(println)
+
+val o = Some(1).map(2 * _).exists(10 <)
+
+val i: Option[Option[String]] = ...
+i.flatten.getOrElse("null")</code></pre>
+		</section>
+
+		<section>
+			<h3></h3>
+<pre><code class="scala">def buildMapFromString(str: String) =
+    str.
+      split("[.!?]+").view.
+      map(
+        _.
+          replaceAll("(\\r|\\n|[^\\wа-яА-Я ])+", " ").
+          toLowerCase.
+          split(" +").
+          iterator.
+          sliding(4).
+          filter(
+            _.size >= 4
+          ).
+          foldLeft(Map[String, List[String]]())(
+            (resultMap, slidingSeq) =>
+              ((key: String, value: String) =>
+                if (resultMap.contains(key))
+                  resultMap + (key -> (value :: resultMap(key)))
+                else
+                  resultMap + (key -> List(value))
+                ).
+                apply(slidingSeq(0) + " " + slidingSeq(1), slidingSeq(2) + " " + slidingSeq(3))
+          )
+      ).
+      foldLeft(Map[String, List[String]]())(
+        (resultMap, sentenceMap) =>
+          sentenceMap.foldLeft(resultMap)(
+            (map, entry) =>
+              if (map.contains(entry._1))
+                map + (entry._1 -> (entry._2 ::: map(entry._1)))
+              else
+                map + entry
+          )
+      )</code></pre>
+		</section>
+
+		<section>
+			<h3>Lazy computations</h3>
+<pre><code class="scala">lazy val v = postponedCall()
+
+Source.fromFile().getLines().view.map(...).filter(...).drop(100).sum()</code></pre>
+		</section>
+
+		<section>
+			<h3>Pattern matching</h3>
+<pre><code class="scala">val r = """(\w+)!""".r
+
+"str" match {
+  case "a" => ...
+  case "b" => ...
+  case r(gr) => ...
+
+  case Some(s: String) => ...
+  case None => ...
+
+  case list @ head :: next :: tail => ...
+
+  case MyCaseClass(p1, p2) => ...
+}</code></pre>
+		</section>
+
+		<section>
+<pre><code class="scala">try {
+  ...
+} catch {
+  case _: IOException => ...
+}
+
+def m(i: Int, j: Int) = {
+  case j: Int if j != 0 => i / j
+  case _ => throw new NumberFormatException
+}</code></pre>
+		</section>
+
+		<section>
+			<h3>Immutability</h3>
+		</section>
+
+		<section>
+			<h1>Immutability</h1>
+		</section>
+
+		<section>
+			<h3>Concurrency</h3>
+<pre><code class="scala">List("abc", "12345", "..........").par.map(_.length)
+
+import scala.concurrent._
+import scala.concurrent.duration._
+import ExecutionContext.Implicits.global
+
+val f = Future[String] {
+  heavy1()
+}
+val ff = f map {
+  heavy2()
+} recover {
+  case SomeException() => ...
+}
+
+f onComplete {
+  case Success(posts) => ...
+  case Failure(t) => ...
+}
+
+val str = for {
+  i <- f
+  j <- ff
+} yield i + j
+
+Await.result(f, 1 second)
+
+val p = Promise()
+p.future
+p.complete(result)</code></pre>
+		</section>
+
+		<section>
+			<h3>Typesafe stack</h3>
+			<ul>
+				<li>Scala</li>
+				<li>Play</li>
+				<li>Akka</li>
+				<li>Spray</li>
+				<li>Slick</li>
+				<li>SBT</li>
+			</ul>
+		</section>
+
+		<section>
+			<img src="images/01">
+		</section>
+
+		<section>
+			<img src="images/02">
+		</section>
+
+		<section>
+			<img src="images/03">
+		</section>
+
+		<section>
+			<p>thank you</p>
+		</section>
+
+	</div>
+
+</div>
+
+<script>
+	// Full list of configuration options available at:
+	// https://github.com/hakimel/reveal.js#configuration
+	var enableKeyboard = false;
+	Reveal.initialize({
+		controls: false,
+		keyboard: true,
+		progress: true,
+		history: true,
+		center: true,
+		width: 1260,
+		height: 900,
+		minScale: 1,
+		maxScale: 1,
+
+		transition: 'slide' // none/fade/slide/convex/concave/zoom
+	});
+
+	hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
+

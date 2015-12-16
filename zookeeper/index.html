@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>presentation</title>
+
+	<meta charset="utf-8">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/reveal.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/white-theme.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/ir-black.css">
+	<script src="../common-assets/javascripts/reveal.js" type="text/javascript"></script>
+	<script src="../common-assets/javascripts/highlight.pack.js" type="text/javascript"></script>
+	<style>
+		.reveal section img { border: none; }
+
+		sub, sup { font-size: 70% !important; }
+
+		.reveal section img { box-shadow: none; }
+	</style>
+</head>
+<body>
+
+
+<div class="reveal">
+
+	<div class="slides">
+		<section>
+			<h1>Apache ZooKeeper overview</h1>
+		</section>
+
+		<section>
+			<p>language - Java</p>
+			<p>Apache top level project - 2010</p>
+		</section>
+
+		<section>
+			<p>centralized service for maintaining configuration information, naming, providing distributed synchronization,
+				and providing group services</p>
+		</section>
+
+		<section>
+			<img src="images/00">
+		</section>
+
+		<section>
+			<p>Hadoop, Yahoo, Twitter, LinkedIn, Youtube, Facebook...</p>
+			<p class="fragment fade-in">Google - Chubby</p>
+		</section>
+
+		<section>
+			<h3>architecture</h3>
+			<img src="images/01">
+			<p class="fragment fade-in">quorum > leader election</p>
+			<p class="fragment fade-in">specific data storage</p>
+		</section>
+
+		<section>
+			<h3>data model</h3>
+			<p>tree of znodes (1Mb per each)</p>
+			<img src="images/03">
+			<p class="fragment fade-in">ephemeral nodes</p>
+			<p class="fragment fade-in">...are useful when you want to implement [tbd]</p>
+		</section>
+
+		<section>
+			<h3>process</h3>
+			<img src="images/02">
+		</section>
+
+		<section>
+			<h3>guarantees</h3>
+			<ul>
+				<li>Sequential Consistency</li>
+				<li>Atomicity</li>
+				<li>Single System Image</li>
+				<li>Reliability</li>
+				<li>Timeliness</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>performance</h3>
+			<img src="images/04">
+			<p class="fragment fade-in">observers</p>
+		</section>
+
+		<section>
+			<p>Java API (sync)</p>
+<pre><code class="java">ZooKeeper(String connectString, int sessionTimeout, Watcher watcher,
+        long sessionId, byte[] sessionPasswd, boolean canBeReadOnly)
+
+String create(String path, byte[] data, List&lt;ACL> acl, CreateMode createMode)
+
+void delete(String path, int version)
+
+Stat exists(String path, Watcher watcher)
+
+List&lt;String> getChildren(String path, boolean watch)
+
+byte[] getData(String path, boolean watch, Stat stat)
+
+List&lt;org.apache.zookeeper.OpResult> multi(Iterable&lt;org.apache.zookeeper.Op> ops)
+
+Stat setACL(String path, List&lt;ACL> acl, int version)
+
+Stat setData(String path, byte[] data, int version)
+
+void sync(String path, AsyncCallback.VoidCallback cb, Object ctx)</code></pre>
+		</section>
+
+		<section>
+			<h3>Apache Curator</h3>
+		</section>
+
+		<section>
+			<p>Leader Latch, Leader Election, Shared Reentrant Lock, Shared Lock, Shared Reentrant Read Write Lock, Shared
+				Semaphore, Multi Shared Lock, Barrier, Double Barrier, Shared Counter, Distributed Atomic Long, Path Cache,
+				Node Cache, Tree Cache, Persistent Ephemeral Node, Distributed Queue, Distributed Id Queue, Distributed
+				Priority Queue, Distributed Delay Queue, Simple Distributed Queue</p>
+		</section>
+
+		<section>
+			<h3>Shared Lock</h3>
+<pre><code class="java">RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
+CuratorFramework client = CuratorFrameworkFactory.newClient("host:ip",retryPolicy);
+client.start();
+
+InterProcessSemaphoreMutex lock = new InterProcessSemaphoreMutex(client, path);
+if(lock.acquire(10, TimeUnit.SECONDS)) {
+   try { /*do something*/ }
+   finally { lock.release(); }
+}</code></pre>
+	</section>
+
+		<section>
+			<h3>Distributed Atomic Long</h3>
+<pre><code class="java">public DistributedAtomicLong(CuratorFramework client, String counterPath,
+                           RetryPolicy retryPolicy)
+
+AtomicValue&lt;Long> add(Long delta)
+
+AtomicValue&lt;Long> compareAndSet(Long expectedValue, Long newValue)
+
+void forceSet(Long newValue)
+
+AtomicValue&lt;Long> increment()</code></pre>
+	</section>
+
+		<section>
+			<h3>Distributed Delay Queue</h3>
+<pre><code class="java">QueueBuilder&lt;MessageType> builder = QueueBuilder.builder(client, consumer, serializer, path);
+DistributedDelayQueue&lt;MessageType> queue = builder.buildDelayQueue();
+try {
+  queue.put(item, delayUntilEpoch, maxWait, timeUnit);
+} finally {
+  queue.close();
+}</code></pre>
+	</section>
+
+		<section>
+			<p>thank you</p>
+		</section>
+
+	</div>
+
+</div>
+
+<script>
+	// Full list of configuration options available at:
+	// https://github.com/hakimel/reveal.js#configuration
+	var enableKeyboard = false;
+	Reveal.initialize({
+		controls: false,
+		keyboard: true,
+		progress: true,
+		history: true,
+		center: true,
+		width: 1260,
+		height: 900,
+		minScale: 1,
+		maxScale: 1,
+
+		transition: 'slide' // none/fade/slide/convex/concave/zoom
+	});
+
+	hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
+

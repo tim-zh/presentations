@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>presentation</title>
+
+	<meta charset="utf-8">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/reveal.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/night-theme.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/ir-black.css">
+	<script src="../common-assets/javascripts/reveal.js" type="text/javascript"></script>
+	<script src="../common-assets/javascripts/highlight.pack.js" type="text/javascript"></script>
+	<style>
+		.reveal section img { border: none; }
+
+		sub, sup { font-size: 70% !important; }
+
+		.reveal section img { box-shadow: none; }
+	</style>
+</head>
+<body>
+
+
+<div class="reveal">
+
+	<div class="slides">
+		<section>
+			<h1>JPA overview</h1>
+		</section>
+
+		<section>
+			<h3>Validation</h3>
+<pre><code>@Entity
+    public class Contact implements Serializable {
+        private static final long serialVersionUID = 1L;
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private Long id;
+        @NotNull
+        protected String firstName;
+        @NotNull
+        protected String lastName;
+        @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
+            +"[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
+            +"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+                 message="{invalid.email}")
+        protected String email;
+        @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$",
+                 message="{invalid.phonenumber}")
+        protected String mobilePhone;
+        @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$",
+                 message="{invalid.phonenumber}")
+        protected String homePhone;
+        @Temporal(javax.persistence.TemporalType.DATE)
+        @Past
+        protected Date birthday;
+        ...
+    }</code></pre>
+		</section>
+
+		<section>
+			<h3>Primary key types</h3>
+			<ul>
+				<li>Java primitive types</li>
+				<li>Java primitive wrapper types</li>
+				<li>java.lang.String</li>
+				<li>java.util.Date (the temporal type should be DATE)</li>
+				<li>java.sql.Date</li>
+				<li>java.math.BigDecimal</li>
+				<li>java.math.BigInteger</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Cascade types</h3>
+			<ul>
+				<li>ALL - All cascade operations will be applied to the parent entity�s related entity</li>
+				<li>DETACH - If the parent entity is detached from the persistence context, the related entity will also be detached</li>
+				<li>MERGE - If the parent entity is merged into the persistence context, the related entity will also be merged</li>
+				<li>PERSIST - If the parent entity is persisted into the persistence context, the related entity will also be persisted</li>
+				<li>REFRESH - If the parent entity is refreshed in the current persistence context, the related entity will also be refreshed</li>
+				<li>REMOVE - If the parent entity is removed from the current persistence context, the related entity will also be removed</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>JPQL</h3>
+<pre><code>public List findWithName(String name) {
+return em.createQuery(
+    "SELECT c FROM Customer c WHERE c.name LIKE :custName")
+    .setParameter("custName", name)
+    .setMaxResults(10)
+    .getResultList();
+}</code></pre>
+		</section>
+
+		<section>
+			<h3>JPQL syntax</h3>
+<pre><code>QL_statement ::= select_clause from_clause [where_clause][groupby_clause][having_clause][orderby_clause]
+update_statement :: = update_clause [where_clause]
+delete_statement :: = delete_clause [where_clause]</code></pre>
+		</section>
+
+		<section>
+			<h3>JPQL full syntax</h3>
+<pre><code>QL_statement ::= select_statement | update_statement | delete_statement
+select_statement ::= select_clause from_clause [where_clause] [groupby_clause]
+    [having_clause] [orderby_clause]
+update_statement ::= update_clause [where_clause]
+delete_statement ::= delete_clause [where_clause]
+from_clause ::=
+    FROM identification_variable_declaration
+        {, {identification_variable_declaration |
+            collection_member_declaration}}*
+identification_variable_declaration ::=
+        range_variable_declaration { join | fetch_join }*
+range_variable_declaration ::= abstract_schema_name [AS]
+        identification_variable
+join ::= join_spec join_association_path_expression [AS]
+        identification_variable
+fetch_join ::= join_specFETCH join_association_path_expression
+association_path_expression ::=
+        collection_valued_path_expression |
+        single_valued_association_path_expression
+join_spec::= [LEFT [OUTER] |INNER] JOIN
+join_association_path_expression ::=
+        join_collection_valued_path_expression |
+        join_single_valued_association_path_expression
+join_collection_valued_path_expression::=
+    identification_variable.collection_valued_association_field
+join_single_valued_association_path_expression::=
+        identification_variable.single_valued_association_field
+collection_member_declaration ::=
+        IN (collection_valued_path_expression) [AS]
+        identification_variable
+single_valued_path_expression ::=
+        state_field_path_expression |
+        single_valued_association_path_expression
+state_field_path_expression ::=
+    {identification_variable |
+    single_valued_association_path_expression}.state_field
+single_valued_association_path_expression ::=
+    identification_variable.{single_valued_association_field.}*
+    single_valued_association_field
+collection_valued_path_expression ::=
+    identification_variable.{single_valued_association_field.}*
+    collection_valued_association_field
+state_field ::=
+    {embedded_class_state_field.}*simple_state_field
+update_clause ::=UPDATE abstract_schema_name [[AS]
+    identification_variable] SET update_item {, update_item}*
+update_item ::= [identification_variable.]{state_field |
+    single_valued_association_field} = new_value
+new_value ::=
+     simple_arithmetic_expression |
+    string_primary |
+    datetime_primary |
+    boolean_primary |
+    enum_primary simple_entity_expression |
+    NULL
+delete_clause ::= DELETE FROM abstract_schema_name [[AS]
+    identification_variable]
+select_clause ::= SELECT [DISTINCT] select_expression {,
+    select_expression}*
+select_expression ::=
+    single_valued_path_expression |
+    aggregate_expression |
+    identification_variable |
+    OBJECT(identification_variable) |
+    constructor_expression
+constructor_expression ::=
+    NEW constructor_name(constructor_item {,
+    constructor_item}*)
+constructor_item ::= single_valued_path_expression |
+    aggregate_expression
+aggregate_expression ::=
+    {AVG |MAX |MIN |SUM} ([DISTINCT]
+        state_field_path_expression) |
+    COUNT ([DISTINCT] identification_variable |
+        state_field_path_expression |
+        single_valued_association_path_expression)
+where_clause ::= WHERE conditional_expression
+groupby_clause ::= GROUP BY groupby_item {, groupby_item}*
+groupby_item ::= single_valued_path_expression
+having_clause ::= HAVING conditional_expression
+orderby_clause ::= ORDER BY orderby_item {, orderby_item}*
+orderby_item ::= state_field_path_expression [ASC |DESC]
+subquery ::= simple_select_clause subquery_from_clause
+    [where_clause] [groupby_clause] [having_clause]
+subquery_from_clause ::=
+    FROM subselect_identification_variable_declaration
+        {, subselect_identification_variable_declaration}*
+subselect_identification_variable_declaration ::=
+    identification_variable_declaration |
+    association_path_expression [AS] identification_variable |
+    collection_member_declaration
+simple_select_clause ::= SELECT [DISTINCT]
+    simple_select_expression
+simple_select_expression::=
+    single_valued_path_expression |
+    aggregate_expression |
+    identification_variable
+conditional_expression ::= conditional_term |
+    conditional_expression OR conditional_term
+conditional_term ::= conditional_factor | conditional_term AND
+    conditional_factor
+conditional_factor ::= [NOT] conditional_primary
+conditional_primary ::= simple_cond_expression |(
+    conditional_expression)
+simple_cond_expression ::=
+    comparison_expression |
+    between_expression |
+    like_expression |
+    in_expression |
+    null_comparison_expression |
+    empty_collection_comparison_expression |
+    collection_member_expression |
+    exists_expression
+between_expression ::=
+    arithmetic_expression [NOT] BETWEEN
+        arithmetic_expressionAND arithmetic_expression |
+    string_expression [NOT] BETWEEN string_expression AND
+        string_expression |
+    datetime_expression [NOT] BETWEEN
+        datetime_expression AND datetime_expression
+in_expression ::=
+    state_field_path_expression [NOT] IN (in_item {, in_item}*
+    | subquery)
+in_item ::= literal | input_parameter
+like_expression ::=
+    string_expression [NOT] LIKE pattern_value [ESCAPE
+        escape_character]
+null_comparison_expression ::=
+    {single_valued_path_expression | input_parameter} IS [NOT]
+        NULL
+empty_collection_comparison_expression ::=
+    collection_valued_path_expression IS [NOT] EMPTY
+collection_member_expression ::= entity_expression
+    [NOT] MEMBER [OF] collection_valued_path_expression
+exists_expression::= [NOT] EXISTS (subquery)
+all_or_any_expression ::= {ALL |ANY |SOME} (subquery)
+comparison_expression ::=
+    string_expression comparison_operator {string_expression |
+    all_or_any_expression} |
+    boolean_expression {= |<> } {boolean_expression |
+    all_or_any_expression} |
+    enum_expression {= |<> } {enum_expression |
+    all_or_any_expression} |
+    datetime_expression comparison_operator
+        {datetime_expression | all_or_any_expression} |
+    entity_expression {= |<> } {entity_expression |
+    all_or_any_expression} |
+    arithmetic_expression comparison_operator
+        {arithmetic_expression | all_or_any_expression}
+comparison_operator ::= = |> |>= |< |<= |<>
+arithmetic_expression ::= simple_arithmetic_expression |
+    (subquery)
+simple_arithmetic_expression ::=
+    arithmetic_term | simple_arithmetic_expression {+ |- }
+        arithmetic_term
+arithmetic_term ::= arithmetic_factor | arithmetic_term {* |/ }
+    arithmetic_factor
+arithmetic_factor ::= [{+ |- }] arithmetic_primary
+arithmetic_primary ::=
+    state_field_path_expression |
+    numeric_literal |
+    (simple_arithmetic_expression) |
+    input_parameter |
+    functions_returning_numerics |
+    aggregate_expression
+string_expression ::= string_primary | (subquery)
+string_primary ::=
+    state_field_path_expression |
+    string_literal |
+    input_parameter |
+    functions_returning_strings |
+    aggregate_expression
+datetime_expression ::= datetime_primary | (subquery)
+datetime_primary ::=
+    state_field_path_expression |
+    input_parameter |
+    functions_returning_datetime |
+    aggregate_expression
+boolean_expression ::= boolean_primary | (subquery)
+boolean_primary ::=
+    state_field_path_expression |
+    boolean_literal |
+    input_parameter
+ enum_expression ::= enum_primary | (subquery)
+enum_primary ::=
+    state_field_path_expression |
+    enum_literal |
+    input_parameter
+entity_expression ::=
+    single_valued_association_path_expression |
+        simple_entity_expression
+simple_entity_expression ::=
+    identification_variable |
+    input_parameter
+functions_returning_numerics::=
+    LENGTH(string_primary) |
+    LOCATE(string_primary, string_primary[,
+        simple_arithmetic_expression]) |
+    ABS(simple_arithmetic_expression) |
+    SQRT(simple_arithmetic_expression) |
+    MOD(simple_arithmetic_expression,
+        simple_arithmetic_expression) |
+    SIZE(collection_valued_path_expression)
+functions_returning_datetime ::=
+    CURRENT_DATE |
+    CURRENT_TIME |
+    CURRENT_TIMESTAMP
+functions_returning_strings ::=
+    CONCAT(string_primary, string_primary) |
+    SUBSTRING(string_primary,
+        simple_arithmetic_expression,
+        simple_arithmetic_expression)|
+    TRIM([[trim_specification] [trim_character] FROM]
+        string_primary) |
+    LOWER(string_primary) |
+    UPPER(string_primary)
+trim_specification ::= LEADING | TRAILING | BOTH</code></pre>
+		</section>
+
+		<section>
+			<h3>Typing</h3>
+<pre><code class="java">EntityManager em = ...;
+String jpql = "SELECT p FROM Person WHERE p.age > 20";
+Query query = em.createQuery(jpql);
+List result = query.getResultList();</code></pre>
+		</section>
+
+		<section>
+			<h3>Criteria API</h3>
+<pre><code class="java">EntityManager em = ...;
+CriteriaBuilder cb = em.getCriteriaBuilder();
+CriteriaQuery<Pet> cq = cb.createQuery(Pet.class);
+Root<Pet> pet = cq.from(Pet.class);
+cq.select(pet);
+TypedQuery<Pet> q = em.createQuery(cq);
+List<Pet> allPets = q.getResultList();
+
+
+SELECT p
+FROM Pet p</code></pre>
+		</section>
+
+		<section>
+			<h3>Metamodel</h3>
+<pre><code>@Entity
+public class Person {
+  @Id
+  private long ssn;
+  private string name;
+  private int age;
+
+  public String getName() {...}
+}
+
+@StaticMetamodel(Person.class)
+public class Person_ {
+  public static volatile SingularAttribute<Person,Long> ssn;
+  public static volatile SingularAttribute<Person,String> name;
+  public static volatile SingularAttribute<Person,Integer> age;
+}</code></pre>
+		</section>
+
+		<section>
+			<h3>Metamodel example</h3>
+<pre><code class="java">EntityManager em = ...
+QueryBuilder qb = em.getQueryBuilder();
+CriteriaQuery<Person> c = qb.createQuery(Person.class);
+Root<Person> p = c.from(Person.class);
+Predicate condition = qb.gt(p.get(Person_.age), 20);
+c.where(condition);
+TypedQuery<Person> q = em.createQuery(c);
+List<Person> result = q.getResultList();</code></pre>
+		</section>
+
+		<section>
+			<h3>Locking</h3>
+<pre><code class="java">em.lock(person, LockModeType.OPTIMISTIC);
+
+em.find(Person.class, personPK, LockModeType.PESSIMISTIC_WRITE);
+
+em.refresh(person, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+
+Query q = em.createQuery(...);
+q.setLockMode(LockModeType.PESSIMISTIC_FORCE_INCREMENT);
+
+@NamedQuery(..., lockMode=PESSIMISTIC_READ)</code></pre>
+		</section>
+
+		<section>
+			<p>thank you</p>
+		</section>
+	</div>
+
+</div>
+
+<script>
+	// Full list of configuration options available at:
+	// https://github.com/hakimel/reveal.js#configuration
+	var enableKeyboard = false;
+	Reveal.initialize({
+		controls: false,
+		keyboard: true,
+		progress: true,
+		history: true,
+		center: true,
+		width: 1260,
+		height: 900,
+		minScale: 1,
+		maxScale: 1,
+
+		transition: 'slide' // none/fade/slide/convex/concave/zoom
+	});
+
+	hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
+

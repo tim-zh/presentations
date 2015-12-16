@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>presentation</title>
+
+	<meta charset="utf-8">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/reveal.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/night-theme.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/ir-black.css">
+	<script src="../common-assets/javascripts/reveal.js" type="text/javascript"></script>
+	<script src="../common-assets/javascripts/highlight.pack.js" type="text/javascript"></script>
+	<style>
+		.reveal section img { border: none; }
+
+		sub, sup { font-size: 70% !important; }
+
+		.reveal section img { box-shadow: none; }
+	</style>
+</head>
+<body>
+
+
+<div class="reveal">
+
+	<div class="slides">
+		<section>
+			<h1>MapReduce overview. Distributed systems</h1>
+		</section>
+
+		<section>
+			<h3>Reasons:</h3>
+			<ul>
+				<li>expensive single-server infrastructure</li>
+				<li>single point of failure</li>
+			</ul>
+		</section>
+
+		<section>
+			<img src="images/01">
+		</section>
+
+		<section>
+			<h1>Practice</h1>
+		</section>
+
+		<section>
+			<h3>Akka:</h3>
+			<ul>
+				<li>Remote</li>
+				<li>Cluster</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>CAP theorem:</h3>
+			<ul>
+				<li>Consistency</li>
+				<li>Availability</li>
+				<li>Partition tolerance</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Partitioning in Akka Cluster - failure detector</h3>
+			<pre>phi = -log10(1 - F(timeSinceLastHeartbeat))</pre>
+			<p><small>where F is the cumulative distribution function of a normal distribution with mean and standard deviation estimated from historical heartbeat inter-arrival times.</small></p>
+			<img src="images/02">
+		</section>
+
+		<section>
+			<img src="images/03">
+			<p>it's over 9000!</p>
+		</section>
+
+		<section>
+			<img src="images/04">
+		</section>
+
+		<section>
+			<img src="images/05">
+		</section>
+
+		<section>
+			<table>
+				<tr>
+					<td><h3>SQL:</h3></td>
+					<td><h3>NoSQL:</h3></td>
+					<td><h3>Machine learning:</h3></td>
+				</tr>
+				<tr>
+					<td>
+						<li>Hive
+						<li>Impala
+						<li>Spark SQL
+					</td>
+					<td>
+						<li>HBase
+					</td>
+					<td>
+						<li>Mahout
+						<li>MLlib
+					</td>
+				</tr>
+			</table>
+		</section>
+
+		<section>
+			<h3>Providers:</h3>
+			<ul>
+				<li>Cloudera</li>
+				<li>Horton works</li>
+				<li>MapR</li>
+			</ul>
+		</section>
+
+		<section>
+			<p><img src="images/06"></p>
+			<p><img src="images/07"></p>
+		</section>
+
+		<section>
+<pre><code class="scala">object SparkPi {
+  def main(args: Array[String]) {
+
+    val spark = new SparkContext(new SparkConf().setAppName("Spark Pi"))
+
+    val slices = 2
+    val n = math.min(200000L, Int.MaxValue).toInt
+
+    val count = spark.parallelize(1 until n, slices).map { i =>
+      val x = random * 2 - 1
+      val y = random * 2 - 1
+      if (x*x + y*y < 1) 1 else 0
+    }.reduce(_ + _)
+
+    println("Pi is roughly " + 4.0 * count / n)
+
+    spark.stop()
+  }
+}</code></pre>
+
+<pre><code class="bash">yarn jar pi.jar SparkPi
+</code></pre>
+		</section>
+
+		<section>
+<pre><code class="scala">val file = spark.textFile("hdfs://...")
+val errors = file.filter(line => line.contains("ERROR"))
+errors.cache()
+// Count all the errors
+errors.count()
+// Count errors mentioning MySQL
+errors.filter(line => line.contains("MySQL")).count()
+// Fetch the MySQL errors as an array of strings
+errors.filter(line => line.contains("MySQL")).collect()</code></pre>
+		</section>
+
+		<section>
+			<img src="images/08">
+		</section>
+
+		<section>
+			<p>thank you</p>
+		</section>
+
+	</div>
+
+</div>
+
+<script>
+	// Full list of configuration options available at:
+	// https://github.com/hakimel/reveal.js#configuration
+	var enableKeyboard = false;
+	Reveal.initialize({
+		controls: false,
+		keyboard: true,
+		progress: true,
+		history: true,
+		center: true,
+		width: 1260,
+		height: 900,
+		minScale: 1,
+		maxScale: 1,
+
+		transition: 'slide' // none/fade/slide/convex/concave/zoom
+	});
+
+	hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
+
