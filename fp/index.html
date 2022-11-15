@@ -15,6 +15,10 @@
 		sub, sup { font-size: 70% !important; }
 
 		.reveal section img { box-shadow: none; }
+
+		.img_alt {
+			transform: scaleX(-1);
+		}
 	</style>
 </head>
 <body>
@@ -29,10 +33,19 @@
 
 		<section>
 			<h3>Links</h3>
-			<ul>
-				<li>fp-ts lib - https://gcanti.github.io/fp-ts/learning-resources/</li>
-				<li>fp glossary - https://degoes.net/articles/fp-glossary</li>
-			</ul>
+			<section>
+				<ul>
+					<li>fp-ts lib - <a href="https://gcanti.github.io/fp-ts/learning-resources/">https://gcanti.github.io/fp-ts/learning-resources/</a></li>
+					<li>fp glossary - <a href="https://degoes.net/articles/fp-glossary">https://degoes.net/articles/fp-glossary</a></li>
+				</ul>
+			</section>
+			<section>
+				<ul>
+					<li>fp-ts lib - <a href="https://gcanti.github.io/fp-ts/learning-resources/">https://gcanti.github.io/fp-ts/learning-resources/</a></li>
+					<li>fp glossary - <a href="https://degoes.net/articles/fp-glossary">https://degoes.net/articles/fp-glossary</a></li>
+				</ul>
+				<img src="images/degoes.png">
+			</section>
 		</section>
 
 		<section>
@@ -83,6 +96,7 @@
 	.map(x => x + "!")
 	.forEach(x => console.log(x))
 > 2!</code></pre>
+				<p style="font-size:50%">replacing <code style="color: #00f">[1, 2, 3].filter(x => x % 2 == 0)</code> with its result</p>
 <pre><code>[2]
 	.map(x => x + "!")
 	.forEach(x => console.log(x))
@@ -127,7 +141,7 @@
 		</section>
 
 		<section>
-			<h4>Hello world</h4>
+			<h3>Hello world example</h3>
 			<section>
 <pre><code>printHello()</code></pre>
 			</section>
@@ -137,6 +151,11 @@
 			</section>
 			<section>
 <pre><code>printHello()
+> exterminate!</code></pre>
+				<img src="images/huh.jpg">
+			</section>
+			<section>
+<pre><code>printHello()
 
 function printHello() {
   prepare()
@@ -152,8 +171,7 @@ function printHello() {
 }
 
 function print(x: string) {
-  if (x)
-    console.log(x)
+  //nope, wrong one
 }</code></pre>
 			</section>
 			<section>
@@ -165,8 +183,7 @@ function printHello() {
 }
 
 function print(x: string) {
-  if (x)
-    console.log(x)
+  //nope, wrong one
 }
 
 function prepare() {
@@ -174,6 +191,7 @@ function prepare() {
 }</code></pre>
 			</section>
 			<section>
+				<h4>fp-ish style</h4>
 <pre><code>console.log(printableHello())
 
 function printableHello(): string {
@@ -183,7 +201,7 @@ function printableHello(): string {
 		</section>
 
 		<section>
-			<h3>Concurrency</h3>
+			<h3>Concurrency example</h3>
 			<section>
 <pre><code>var x = 0
 function start() {
@@ -195,8 +213,10 @@ function start() {
     }, 100)
   })
 }
-Promise.all([start(), start(), start()]).then(() => console.log(x))</code></pre>
-				<a href="https://www.typescriptlang.org/play?#code/G4QwTgBAHhC8EAYCwAoAZgVwHYGMAuAlgPZYQDOe4eAFAJQQDeqEEYApnhmKVmwO4QACmCIBbAmTbVq7MvVgA+RsxYQcJChACecaBADUEAIwqWkvABUCotkQw06cJUxSrVMeFtOrZ1BLW8AXwAaYwR-FUCAlEDUYTEJNgA6EAAbVOoAbQoqOlCcsBpafMpCugBdWiS8AAs2LGl5JXUsMiJU5NSiAHNqKFpaIA">playground</a>
+Promise.all([start(), start(), start()]).then(() => console.log(x))
+
+> //should print 3</code></pre>
+				<a style="font-size:50%" href="https://www.typescriptlang.org/play?#code/G4QwTgBAHhC8EAYCwAoAZgVwHYGMAuAlgPZYQDOe4eAFAJQQDeqEEYApnhmKVmwO4QACmCIBbAmTbVq7MvVgA+RsxYQcJChACecaBADUEAIwqWkvABUCotkQw06cJUxSrVMeFtOrZ1BLW8AXwAaYwR-FUCAlEDUYTEJNgA6EAAbVOoAbQoqOlCcsBpafMpCugBdWiS8AAs2LGl5JXUsMiJU5NSiAHNqKFpaIA">playground</a>
 			</section>
 			<section>
 <pre><code>var x = 0
@@ -208,17 +228,20 @@ function start() {
     }, 100)
   })
 }
-Promise.all([start(), start(), start()]).then(xs => console.log(sum(xs)))</code></pre>
-				<a href="https://www.typescriptlang.org/play?#code/G4QwTgBAHhC8EAYCwAoAxgewHYGcAuEOArgLZwQAUUOAXBFqQEYCmYA2gLoCUcAfNDgB0YZgBMiaZhQo4ANNB6x+OCAGpo8hF1QAzIljR4AltkJ5weCjwDeqCBBF4iYLPWYB3CAAUwGEkZxmAB4GEhYwXmkRHEV+WxR7e0xcAgBPchh1AEY7RMC8ABUjEmYMIksrPgh4xMToilTtBMSAX3kshC1clqaW1B8-AOZBEAAbUYo2fAsreWmwSy458wWrbkE8AAtmLCoVJQhknAxR4dGMAHMZUj2uO6A">playground</a>
+Promise.all([start(), start(), start()]).then(xs => console.log(sum(xs)))
+
+> //actually prints 3</code></pre>
+				<a style="font-size:50%" href="https://www.typescriptlang.org/play?#code/G4QwTgBAHhC8EAYCwAoAxgewHYGcAuEOArgLZwQAUUOAXBFqQEYCmYA2gLoCUcAfNDgB0YZgBMiaZhQo4ANNB6x+OCAGpo8hF1QAzIljR4AltkJ5weCjwDeqCBBF4iYLPWYB3CAAUwGEkZxmAB4GEhYwXmkRHEV+WxR7e0xcAgBPchh1AEY7RMC8ABUjEmYMIksrPgh4xMToilTtBMSAX3kshC1clqaW1B8-AOZBEAAbUYo2fAsreWmwSy458wWrbkE8AAtmLCoVJQhknAxR4dGMAHMZUj2uO6A">playground</a>
 			</section>
 		</section>
 
 		<section>
-			<h3>Side effects in FP</h3>
+			<h3>Side effects in types</h3>
 			<section>
 <pre><code>function printHello(): void {
   console.log("hello")
-}</code></pre>
+}
+//make it functional</code></pre>
 			</section>
 			<section>
 <pre><code>function printHello(): () => void {
@@ -234,6 +257,7 @@ lazy()
 <pre><code>interface IO&lt;A> {
   (): A
 }</code></pre>
+				<img class="img_alt" src="images/smith.png">
 			</section>
 			<section>
 <pre><code>function printHello(): IO&lt;void> {
@@ -241,9 +265,12 @@ lazy()
 }</code></pre>
 			</section>
 			<section>
+				<h4>more realistic state of things</h4>
 <pre><code>function readInput(): IO&lt;string> {...}
 function parse(x: string): IO&lt;Result> {...}
-function log(x: Result): IO&lt;void> {...}</code></pre>
+function log(x: Result): IO&lt;void> {...}
+
+??? //compose</code></pre>
 			</section>
 			<section>
 <pre><code>function readInput(): IO&lt;string> {...}
@@ -278,7 +305,7 @@ if (a) {
 }</code></pre>
 			</section>
 			<section>
-				<h4>Sudden exercise!</h4>
+				<h4>Another sudden exercise!</h4>
 <pre><code>function readInput(): string[] {...}
 function parse(x: string): Result[] {...}
 function log(x: Result): void[] {...}
@@ -286,7 +313,7 @@ function log(x: Result): void[] {...}
 ???</code></pre>
 			</section>
 			<section>
-				<h4>Sudden exercise!</h4>
+				<h4>Another sudden exercise!</h4>
 <pre><code>function readInput(): string[] {...}
 function parse(x: string): Result[] {...}
 function log(x: Result): void[] {...}
@@ -294,12 +321,15 @@ function log(x: Result): void[] {...}
 readInput()().forEach(a => parse(a)).forEach(b => log(b))</code></pre>
 			</section>
 			<section>
-				<h4>Sudden exercise!</h4>
+				<h4>Another sudden exercise!</h4>
 				<pre><code>function readInput(): string[] {...}
 function parse(x: string): Result[] {...}
 function log(x: Result): void[] {...}
 
 const x = readInput()().flatMap(a => parse(a)).flatMap(b => log(b))</code></pre>
+			</section>
+			<section>
+				<h4>¿Generic way to compose?</h4>
 			</section>
 		</section>
 
@@ -311,6 +341,7 @@ const x = readInput()().flatMap(a => parse(a)).flatMap(b => log(b))</code></pre>
 
   flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B>
 }</code></pre>
+				<img src="images/smith.png">
 			</section>
 			<section>
 <pre><code>interface Monad&lt;F> {
@@ -323,15 +354,17 @@ const x = readInput()().flatMap(a => parse(a)).flatMap(b => log(b))</code></pre>
 
   flatMap&lt;A, B>(x: HKT&lt;F, A>, f: (a: A) => HKT&lt;F, B>): HKT&lt;F, B>
 }</code></pre>
+				<span style="font-size: 40%">
 				<h4>monad laws</h4>
 				<ul>
 					<li>flatMap(of(x), f) = f(x) (Left identity)</li>
 					<li>flatMap(f(x), of) = f(x) (Right identity)</li>
 					<li>flatMap(h(x), y => flatMap(g(y), f)) = flatMap(flatMap(h(x), g), f)</li>
 				</ul>
+				</span>
 			</section>
 			<section>
-				<h4>Sudden exercise!</h4>
+				<h4>Should've been expecting an exercise by now!</h4>
 <pre><code>interface Monad&lt;F> {
   of&lt;A>(x: A): F&lt;A>
 
@@ -345,7 +378,7 @@ const x = readInput()().flatMap(a => parse(a)).flatMap(b => log(b))</code></pre>
 const zero: F&lt;undefined> = ...</code></pre>
 			</section>
 			<section>
-				<h4>Sudden exercise!</h4>
+				<h4>Should've been expecting an exercise by now!</h4>
 <pre><code>interface Monad&lt;F> {
   of&lt;A>(x: A): F&lt;A>
 
@@ -361,6 +394,7 @@ const zero: F&lt;undefined> = ...</code></pre>
 		</section>
 
 		<section>
+			<h4>Sudden OOP</h4>
 			<section>
 				<h4>OOP style monad</h4>
 <pre><code>interface Monad&lt;A> {
@@ -417,6 +451,15 @@ const zero: F&lt;undefined> = ...</code></pre>
 					<li>just give up</li>
 				</ul>
 			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+				<ul>
+					<li>make an exception for logging</li>
+					<li>return log lines beside the result</li>
+					<li>just give up</li>
+					<li><img src="images/another.png"></li>
+				</ul>
+			</section>
 		</section>
 
 		<section>
@@ -425,10 +468,17 @@ const zero: F&lt;undefined> = ...</code></pre>
 <pre><code>interface Reader&lt;R, A> {
   (r: R): A
 }</code></pre>
+				<img src="images/smith.png">
+				<img class="img_alt" src="images/smith.png">
 			</section>
 			<section>
 <pre><code>function log(x: Result): Reader&lt;Logging, void> {...}</code></pre>
 			</section>
+		</section>
+
+		<section>
+			<h1>purify your functions</h1>
+			<h1>make side effects visible</h1>
 		</section>
 
 		<section>
