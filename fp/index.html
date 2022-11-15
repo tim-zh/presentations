@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>presentation</title>
+
+	<meta charset="utf-8">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/reveal.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/white-theme-white-code.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/idea.min.css">
+	<script src="../common-assets/javascripts/reveal.js" type="text/javascript"></script>
+	<script src="../common-assets/javascripts/highlight.min.js" type="text/javascript"></script>
+	<style>
+		.reveal section img { border: none; }
+
+		sub, sup { font-size: 70% !important; }
+
+		.reveal section img { box-shadow: none; }
+	</style>
+</head>
+<body>
+
+
+<div class="reveal">
+
+	<div class="slides">
+		<section>
+			<h1>Functional programming introduction</h1>
+		</section>
+
+		<section>
+			<h3>Links</h3>
+			<ul>
+				<li>fp-ts lib - https://gcanti.github.io/fp-ts/learning-resources/</li>
+				<li>fp glossary - https://degoes.net/articles/fp-glossary</li>
+			</ul>
+		</section>
+
+		<section>
+			<h3>Programming with functions</h3>
+			<section></section>
+			<section>
+				<img style="height:20em; margin-top: 2em" src="images/f.svg">
+			</section>
+			<section>
+				<img style="height:20em; margin-top: 2em" src="images/g.svg">
+			</section>
+			<section>
+				<img style="height:20em; margin-top: 2em" src="images/gf.svg">
+			</section>
+		</section>
+
+		<section>
+			<h3>Function composition</h3>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+			</section>
+			<section>
+				<h4>Sudden exercise!</h4>
+<pre><code>const sum = (xs: number[]) => ???</code></pre>
+			</section>
+			<section>
+				<h4>Sudden exercise!</h4>
+<pre><code>const sum = (xs: number[]) => xs.reduce((s, x) => s + x, 0)</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h3>Referential transparency</h3>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+			</section>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>[2]
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+			</section>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>[2]
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>["2!"]
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+			</section>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>[2]
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>["2!"]
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>//...
+></code></pre>
+			</section>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)      //pure
+	.map(x => x + "!")            //pure
+	.forEach(x => console.log(x)) //side effect!</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h4>Hello world</h4>
+			<section>
+<pre><code>printHello()</code></pre>
+			</section>
+			<section>
+<pre><code>printHello()
+> exterminate!</code></pre>
+			</section>
+			<section>
+<pre><code>printHello()
+
+function printHello() {
+  prepare()
+  print()
+}</code></pre>
+			</section>
+			<section>
+<pre><code>printHello()
+
+function printHello() {
+  prepare()
+  print()
+}
+
+function print(x: string) {
+  if (x)
+    console.log(x)
+}</code></pre>
+			</section>
+			<section>
+<pre><code>printHello()
+
+function printHello() {
+  prepare()
+  print()
+}
+
+function print(x: string) {
+  if (x)
+    console.log(x)
+}
+
+function prepare() {
+  console.log("exterminate!")
+}</code></pre>
+			</section>
+			<section>
+<pre><code>console.log(printableHello())
+
+function printableHello(): string {
+  return "hello"
+}</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h3>Concurrency</h3>
+			<section>
+<pre><code>var x = 0
+function start() {
+  return new Promise((res) => {
+    const y = x + 1
+    setTimeout(() => {
+      x = y
+      res(0)
+    }, 100)
+  })
+}
+Promise.all([start(), start(), start()]).then(() => console.log(x))</code></pre>
+				<a href="https://www.typescriptlang.org/play?#code/G4QwTgBAHhC8EAYCwAoAZgVwHYGMAuAlgPZYQDOe4eAFAJQQDeqEEYApnhmKVmwO4QACmCIBbAmTbVq7MvVgA+RsxYQcJChACecaBADUEAIwqWkvABUCotkQw06cJUxSrVMeFtOrZ1BLW8AXwAaYwR-FUCAlEDUYTEJNgA6EAAbVOoAbQoqOlCcsBpafMpCugBdWiS8AAs2LGl5JXUsMiJU5NSiAHNqKFpaIA">playground</a>
+			</section>
+			<section>
+<pre><code>var x = 0
+function start() {
+  return new Promise&lt;number>((res) => {
+    const y = x + 1
+    setTimeout(() => {
+      res(y)
+    }, 100)
+  })
+}
+Promise.all([start(), start(), start()]).then(xs => console.log(sum(xs)))</code></pre>
+				<a href="https://www.typescriptlang.org/play?#code/G4QwTgBAHhC8EAYCwAoAxgewHYGcAuEOArgLZwQAUUOAXBFqQEYCmYA2gLoCUcAfNDgB0YZgBMiaZhQo4ANNB6x+OCAGpo8hF1QAzIljR4AltkJ5weCjwDeqCBBF4iYLPWYB3CAAUwGEkZxmAB4GEhYwXmkRHEV+WxR7e0xcAgBPchh1AEY7RMC8ABUjEmYMIksrPgh4xMToilTtBMSAX3kshC1clqaW1B8-AOZBEAAbUYo2fAsreWmwSy458wWrbkE8AAtmLCoVJQhknAxR4dGMAHMZUj2uO6A">playground</a>
+			</section>
+		</section>
+
+		<section>
+			<h3>Side effects in FP</h3>
+			<section>
+<pre><code>function printHello(): void {
+  console.log("hello")
+}</code></pre>
+			</section>
+			<section>
+<pre><code>function printHello(): () => void {
+  return () => console.log("hello")
+}
+
+const lazy = printHello() //does nothing
+
+lazy()
+> hello</code></pre>
+			</section>
+			<section>
+<pre><code>interface IO&lt;A> {
+  (): A
+}</code></pre>
+			</section>
+			<section>
+<pre><code>function printHello(): IO&lt;void> {
+  return () => console.log("hello")
+}</code></pre>
+			</section>
+			<section>
+<pre><code>function readInput(): IO&lt;string> {...}
+function parse(x: string): IO&lt;Result> {...}
+function log(x: Result): IO&lt;void> {...}</code></pre>
+			</section>
+			<section>
+<pre><code>function readInput(): IO&lt;string> {...}
+function parse(x: string): IO&lt;Result> {...}
+function log(x: Result): IO&lt;void> {...}
+
+const a = readInput()()
+const b = parse()(a)
+const c = log()(b)
+</code></pre>
+			</section>
+			<section>
+<pre><code>function readInput(): Promise&lt;string> {...}
+function parse(x: string): Promise&lt;Result> {...}
+function log(x: Result): Promise&lt;void> {...}
+
+readInput()().then(a => parse(a)).then(b => log(b))</code></pre>
+			</section>
+			<section>
+<pre><code>type Option&lt;A> = A | undefined
+
+function readInput(): Option&lt;string> {...}
+function parse(x: string): Option&lt;Result> {...}
+function log(x: Result): Option&lt;void> {...}
+
+const a = readInput()()
+if (a) {
+  const b = parse()(a)
+    if (b) {
+      const c = log()(b)
+    }
+}</code></pre>
+			</section>
+			<section>
+				<h4>Sudden exercise!</h4>
+<pre><code>function readInput(): string[] {...}
+function parse(x: string): Result[] {...}
+function log(x: Result): void[] {...}
+
+???</code></pre>
+			</section>
+			<section>
+				<h4>Sudden exercise!</h4>
+<pre><code>function readInput(): string[] {...}
+function parse(x: string): Result[] {...}
+function log(x: Result): void[] {...}
+
+readInput()().forEach(a => parse(a)).forEach(b => log(b))</code></pre>
+			</section>
+			<section>
+				<h4>Sudden exercise!</h4>
+				<pre><code>function readInput(): string[] {...}
+function parse(x: string): Result[] {...}
+function log(x: Result): void[] {...}
+
+const x = readInput()().flatMap(a => parse(a)).flatMap(b => log(b))</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h3>Monad</h3>
+			<section>
+<pre><code>interface Monad&lt;F> {
+  of&lt;A>(x: A): F&lt;A>
+
+  flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B>
+}</code></pre>
+			</section>
+			<section>
+<pre><code>interface Monad&lt;F> {
+  of&lt;A>(x: A): F&lt;A>
+
+  flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B>
+}</code></pre>
+<pre><code>interface Monad&lt;F> {
+  of&lt;A>(x: A): HKT&lt;F, A>
+
+  flatMap&lt;A, B>(x: HKT&lt;F, A>, f: (a: A) => HKT&lt;F, B>): HKT&lt;F, B>
+}</code></pre>
+				<h4>monad laws</h4>
+				<ul>
+					<li>flatMap(of(x), f) = f(x) (Left identity)</li>
+					<li>flatMap(f(x), of) = f(x) (Right identity)</li>
+					<li>flatMap(h(x), y => flatMap(g(y), f)) = flatMap(flatMap(h(x), g), f)</li>
+				</ul>
+			</section>
+			<section>
+				<h4>Sudden exercise!</h4>
+<pre><code>interface Monad&lt;F> {
+  of&lt;A>(x: A): F&lt;A>
+
+  flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B>
+
+  map&lt;A, B>(x: F&lt;A>, f: (a: A) => B): F&lt;B> = ???
+
+  filter&lt;A>(x: F&lt;A>, f: (a: A) => boolean): F&lt;A> = ???
+}
+
+const zero: F&lt;undefined> = ...</code></pre>
+			</section>
+			<section>
+				<h4>Sudden exercise!</h4>
+<pre><code>interface Monad&lt;F> {
+  of&lt;A>(x: A): F&lt;A>
+
+  flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B>
+
+  map&lt;A, B>(x: F&lt;A>, f: (a: A) => B): F&lt;B> = flatMap(x, a => of(f(a)))
+
+  filter&lt;A>(x: F&lt;A>, f: (a: A) => boolean):F&lt;A> = flatMap(x, a => f(a) ? of(a) : zero)
+}
+
+const zero: F&lt;undefined> = ...</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<section>
+				<h4>OOP style monad</h4>
+<pre><code>interface Monad&lt;A> {
+  flatMap&lt;B>(f: (a: A) => Monad&lt;B>): Monad&lt;B>
+
+  map&lt;B>(f: (a: A) => B): Monad&lt;B> = flatMap(a => of(f(a)))
+
+  filter(f: (a: A) => boolean): Monad&lt;A> = flatMap(a => f(a) ? of(a) : zero)
+}</code></pre>
+			</section>
+			<section>
+				<h4>OOP: definition-site safety</h4>
+				<h4>FP: call-site safety</h4>
+			</section>
+		</section>
+
+		<section>
+			<section>
+				<h4>Logging is a side effect</h4>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))</code></pre>
+			</section>
+			<section>
+				<h4>Logging is a side effect</h4>
+				<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))</code></pre>
+				<h4>or not?</h4>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+				<ul>
+					<li>make an exception for logging</li>
+				</ul>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+				<ul>
+					<li>make an exception for logging</li>
+					<li>return log lines beside the result</li>
+				</ul>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+				<ul>
+					<li>make an exception for logging</li>
+					<li>return log lines beside the result</li>
+					<li>just give up</li>
+				</ul>
+			</section>
+		</section>
+
+		<section>
+			<h3>Reader monad</h3>
+			<section>
+<pre><code>interface Reader&lt;R, A> {
+  (r: R): A
+}</code></pre>
+			</section>
+			<section>
+<pre><code>function log(x: Result): Reader&lt;Logging, void> {...}</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<p>thank you</p>
+		</section>
+
+	</div>
+
+</div>
+
+<script>
+	// Full list of configuration options available at:
+	// https://github.com/hakimel/reveal.js#configuration
+	var enableKeyboard = false;
+	Reveal.initialize({
+		controls: false,
+		keyboard: true,
+		progress: true,
+		history: true,
+		center: true,
+		width: 1260,
+		height: 900,
+		minScale: 1,
+		maxScale: 1,
+
+		transition: 'slide' // none/fade/slide/convex/concave/zoom
+	});
+
+	hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
+

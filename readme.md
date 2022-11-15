@@ -1,3 +1,5 @@
+[functional programming introduction](http://tim-zh.github.io/presentations/fp/)
+
 [fuzzy search](http://tim-zh.github.io/presentations/fuzzy-search/)
 
 [jpa](http://tim-zh.github.io/presentations/jpa/)
