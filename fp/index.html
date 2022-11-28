@@ -141,7 +141,7 @@
 		</section>
 
 		<section>
-			<h3>Hello world example</h3>
+			<h3>"Real life" example</h3>
 			<section>
 <pre><code>printHello()</code></pre>
 			</section>
@@ -203,7 +203,7 @@ function printableHello(): string {
 		<section>
 			<h3>Concurrency example</h3>
 			<section>
-<pre><code>var x = 0
+<pre><code>var x = 0 //side effecting mutable state
 function start() {
   return new Promise((res) => {
     const y = x + 1
@@ -342,6 +342,10 @@ const x = readInput()().flatMap(a => parse(a)).flatMap(b => log(b))</code></pre>
   flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B>
 }</code></pre>
 				<img src="images/smith.png">
+				<h4></h4>
+			</section>
+			<section>
+				<h4>Interpreter pattern</h4>
 			</section>
 			<section>
 <pre><code>interface Monad&lt;F> {
@@ -394,7 +398,7 @@ const zero: F&lt;undefined> = ...</code></pre>
 		</section>
 
 		<section>
-			<h4>Sudden OOP</h4>
+			<h4>Sudden OOP reference</h4>
 			<section>
 				<h4>OOP style monad</h4>
 <pre><code>interface Monad&lt;A> {
@@ -404,10 +408,6 @@ const zero: F&lt;undefined> = ...</code></pre>
 
   filter(f: (a: A) => boolean): Monad&lt;A> = flatMap(a => f(a) ? of(a) : zero)
 }</code></pre>
-			</section>
-			<section>
-				<h4>OOP: definition-site safety</h4>
-				<h4>FP: call-site safety</h4>
 			</section>
 		</section>
 
@@ -477,12 +477,85 @@ const zero: F&lt;undefined> = ...</code></pre>
 		</section>
 
 		<section>
+			<h4>Sudden OOP reference again</h4>
+			<section>
+				<h4>OOP: definition-site safety</h4>
+				<pre><code>class C {
+  ...
+  private doSmth(): void {
+    ... //safely mess with contents
+  }
+}</code></pre>
+				<h4>FP: call-site safety</h4>
+				<pre><code>doSmth(): IO&lt;string> {
+  const x: string = requestString("param")
+  const y: IO&lt;number> = requestNumber()
+  ...
+}</code></code></pre>
+			</section>
+			<section>
+				<h4>OOP: definition-site safety</h4>
+				<pre><code>class C {
+  ...
+  private doSmth(): void {
+    ... //safely mess with contents
+  }
+}</code></pre>
+				<h4>FP: call-site safety</h4>
+				<pre><code>doSmth(): IO&lt;string> {
+  const x: string = requestString("param")
+  const y: IO&lt;number> = requestNumber()
+  ...
+}</code></code></pre>
+				<p>use naming conventions to show side effects</p>
+			</section>
+		</section>
+
+		<section>
 			<h1>purify your functions</h1>
 			<h1>make side effects visible</h1>
 		</section>
 
 		<section>
-			<p>thank you</p>
+			<section>
+				<p>thank you</p>
+			</section>
+			<section>
+				<img src="images/surprise.gif">
+				<h3>Bonus</h3>
+			</section>
+			<section>
+				<h3>Monad Transformers</h3>
+<pre><code>interface Monad&lt;F> { //notice the F
+  of&lt;A>(x: A): F&lt;A>
+
+  flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B> //returns the same F
+}</code></pre>
+				<p>there's a generic way to add composition to wrappers</p>
+			</section>
+			<section>
+				<h3>Monad Transformers</h3>
+				<pre><code>interface Monad&lt;F> { //notice the F
+  of&lt;A>(x: A): F&lt;A>
+
+  flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B> //returns the same F
+}</code></pre>
+				<p>there's a generic way to add composition to wrappers</p>
+				<p>there's no generic way to compose different types of wrappers</p>
+			</section>
+			<section>
+				<h3>Monad Transformers</h3>
+				<p><a href="https://gcanti.github.io/fp-ts/modules/index.ts.html#monad-transformers">eitherT, optionT, readerT...</a></p>
+				<p><a href="https://gist.github.com/gcanti/56896de8716604e3f8a75edc27f550c4">example</a></p>
+			</section>
+			<section>
+				<h3>Tagless Final</h3>
+				<p>an approach of abstracting over IO implementations</p>
+			</section>
+		</section>
+
+		<section>
+			<h3>Homework</h3>
 		</section>
 
 	</div>
