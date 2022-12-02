@@ -287,7 +287,7 @@ const c = log()(b)
 function parse(x: string): Promise&lt;Result> {...}
 function log(x: Result): Promise&lt;void> {...}
 
-readInput()().then(a => parse(a)).then(b => log(b))</code></pre>
+readInput().then(a => parse(a)).then(b => log(b))</code></pre>
 			</section>
 			<section>
 <pre><code>type Option&lt;A> = A | undefined
@@ -488,7 +488,7 @@ const zero: F&lt;undefined> = ...</code></pre>
 }</code></pre>
 				<h4>FP: call-site safety</h4>
 				<pre><code>doSmth(): IO&lt;string> {
-  const x: string = requestString("param")
+  const x: string = getString("param")
   const y: IO&lt;number> = requestNumber()
   ...
 }</code></code></pre>
@@ -503,7 +503,7 @@ const zero: F&lt;undefined> = ...</code></pre>
 }</code></pre>
 				<h4>FP: call-site safety</h4>
 				<pre><code>doSmth(): IO&lt;string> {
-  const x: string = requestString("param")
+  const x: string = getString("param")
   const y: IO&lt;number> = requestNumber()
   ...
 }</code></code></pre>
@@ -531,7 +531,6 @@ const zero: F&lt;undefined> = ...</code></pre>
 
   flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B> //returns the same F
 }</code></pre>
-				<p>there's a generic way to add composition to wrappers</p>
 			</section>
 			<section>
 				<h3>Monad Transformers</h3>
@@ -540,7 +539,6 @@ const zero: F&lt;undefined> = ...</code></pre>
 
   flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B> //returns the same F
 }</code></pre>
-				<p>there's a generic way to add composition to wrappers</p>
 				<p>there's no generic way to compose different types of wrappers</p>
 			</section>
 			<section>
@@ -557,7 +555,7 @@ const zero: F&lt;undefined> = ...</code></pre>
 		<section>
 			<h3>Homework</h3>
 			<section>
-				<p>browse through a functional <a href="https://github.com/gcanti/fp-ts/blob/master/examples/fp-ts-to-the-max-I.ts">repo</a> and get a taste of FP</p>
+				<p>browse a functional <a href="https://github.com/gcanti/fp-ts/blob/master/examples/fp-ts-to-the-max-I.ts">repo</a> and get a taste of FP</p>
 			</section>
 			<section>
 				<s><p>browse a functional <a>repo</a> and get a taste of FP</p></s>
