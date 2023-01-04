@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>presentation</title>
+
+	<meta charset="utf-8">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/reveal.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/white-theme-white-code.css">
+	<link rel="stylesheet" media="screen" href="../common-assets/stylesheets/idea.min.css">
+	<script src="../common-assets/javascripts/reveal.js" type="text/javascript"></script>
+	<script src="../common-assets/javascripts/highlight.min.js" type="text/javascript"></script>
+	<style>
+		.reveal section img { border: none; }
+
+		sub, sup { font-size: 70% !important; }
+
+		.reveal section img { box-shadow: none; }
+
+		.img_alt {
+			transform: scaleX(-1);
+		}
+	</style>
+</head>
+<body>
+
+<div class="reveal">
+
+	<div class="slides">
+		<section>
+			<h1>Functional programming introduction for dummies</h1>
+		</section>
+
+		<section>
+			<h2>Notions</h2>
+		</section>
+
+		<section>
+			<h3>Programming with functions</h3>
+			<section></section>
+			<section>
+				<img style="height:20em; margin-top: 2em" src="images/f.svg">
+			</section>
+			<section>
+				<img style="height:20em; margin-top: 2em" src="images/g.svg">
+			</section>
+			<section>
+				<img style="height:20em; margin-top: 2em" src="images/gf.svg">
+			</section>
+		</section>
+
+		<section>
+			<h3>Function composition</h3>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h3>Referential transparency</h3>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+			</section>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+				<p style="font-size:50%">replacing <code style="color: #00f">[1, 2, 3].filter(x => x % 2 == 0)</code> with its result</p>
+<pre><code>[2]
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+			</section>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>[2]
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>["2!"]
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+			</section>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>[2]
+	.map(x => x + "!")
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>["2!"]
+	.forEach(x => console.log(x))
+> 2!</code></pre>
+<pre><code>//...
+></code></pre>
+			</section>
+			<section>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)      //pure
+	.map(x => x + "!")            //pure
+	.forEach(x => console.log(x)) //side effect!</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h2>Problem definition</h2>
+		</section>
+
+		<section>
+			<h3>Example. What does it do?</h3>
+			<section>
+<pre><code>printHello() // () => void</code></pre>
+			</section>
+			<section>
+<pre><code>printHello()
+> exterminate!</code></pre>
+			</section>
+			<section>
+<pre><code>printHello()
+> exterminate!</code></pre>
+				<img src="images/huh.jpg">
+			</section>
+			<section>
+				<h4>fp style</h4>
+<pre><code>console.log(printableHello())
+
+function printableHello(): string {
+  return "hello"
+}</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h3>Concurrency example</h3>
+			<section>
+<pre><code>var x = 0 //side effecting mutable state
+
+Promise.all([f(), f()]).then(() => console.log(x)) //should print 2
+
+function f() { // () => Promise&lt;void>
+  return new Promise(async (res) => {
+    const y = x + 1
+    await sleep(100)
+    x = y
+    res()
+  })
+}
+
+async function sleep(ms: number) { return new Promise(res => setTimeout(res, ms)); }</code></pre>
+			</section>
+			<section>
+<pre><code>var x = 0
+
+Promise.all([f(), f()]).then(xs => console.log(xs[0] + xs[1])) //actually prints 2
+
+function f() { // () => Promise&lt;number>
+  return new Promise(async (res) => {
+    const y = x + 1
+    await sleep(100)
+    res(y)
+  })
+}
+
+async function sleep(ms: number) { return new Promise(res => setTimeout(res, ms)); }</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h2>Solution</h2>
+		</section>
+
+		<section>
+			<h3>Side effects in types</h3>
+			<section>
+<pre><code>function printHello(): void {
+  console.log("hello")
+}
+//make it functional</code></pre>
+			</section>
+			<section>
+<pre><code>function printHello(): () => void {
+  return () => console.log("hello")
+}
+
+const lazy = printHello() //does nothing
+
+lazy()
+> hello</code></pre>
+			</section>
+			<section>
+<pre><code>interface IO&lt;A> {
+  (): A
+}</code></pre>
+				<img class="img_alt" src="images/smith.png">
+			</section>
+			<section>
+<pre><code>function printHello(): IO&lt;void> {
+  return () => console.log("hello")
+}</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h3>How to work with it</h3>
+			<section>
+<pre><code>function readInput(): IO&lt;string> {...}
+function parse(x: string): IO&lt;Result> {...}
+function process(x: Result): IO&lt;void> {...}
+
+const a = readInput()()
+const b = parse()(a)
+const c = process()(b)
+</code></pre>
+			</section>
+			<section>
+<pre><code>function readInput(): Promise&lt;string> {...}
+function parse(x: string): Promise&lt;Result> {...}
+function process(x: Result): Promise&lt;void> {...}
+
+readInput().then(a => parse(a)).then(b => process(b))</code></pre>
+			</section>
+			<section>
+<pre><code>function readInput(): string[] {...}
+function parse(x: string): Result[] {...}
+function process(x: Result): void[] {...}
+
+readInput()().forEach(a => parse(a)).forEach(b => process(b))</code></pre>
+			</section>
+			<section>
+				<pre><code>function readInput(): string[] {...}
+function parse(x: string): Result[] {...}
+function process(x: Result): void[] {...}
+
+const x = readInput()().flatMap(a => parse(a)).flatMap(b => process(b))</code></pre>
+			</section>
+			<section>
+				<h4>¿Generic way to compose?</h4>
+			</section>
+		</section>
+
+		<section>
+			<h2>Solution for the solution</h2>
+		</section>
+
+		<section>
+			<h3>Monad</h3>
+			<section>
+				<pre><code>interface Monad&lt;A> {
+
+  flatMap&lt;B>(f: (a: A) => Monad&lt;B>): Monad&lt;B>
+}</code></pre>
+				<img src="images/smith.png">
+			</section>
+			<section>
+				<h4>real monad definition</h4>
+<pre><code>interface Monad&lt;F> {
+  of&lt;A>(x: A): HKT&lt;F, A>
+
+  flatMap&lt;A, B>(x: HKT&lt;F, A>, f: (a: A) => HKT&lt;F, B>): HKT&lt;F, B>
+}</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<section>
+				<h4>Logging is a side effect</h4>
+<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))</code></pre>
+			</section>
+			<section>
+				<h4>Logging is a side effect</h4>
+				<pre><code>[1, 2, 3]
+	.filter(x => x % 2 == 0)
+	.map(x => x + "!")
+	.forEach(x => console.log(x))</code></pre>
+				<h4>or not?</h4>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+				<ul>
+					<li>make an exception for logging</li>
+				</ul>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+				<ul>
+					<li>make an exception for logging</li>
+					<li>return log lines beside the result</li>
+				</ul>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+				<ul>
+					<li>make an exception for logging</li>
+					<li>return log lines beside the result</li>
+					<li>just give up</li>
+				</ul>
+			</section>
+			<section>
+				<h4>What if everything returns IO?</h4>
+				<ul>
+					<li>make an exception for logging</li>
+					<li>return log lines beside the result</li>
+					<li>just give up</li>
+					<li><img src="images/another.png"></li>
+				</ul>
+			</section>
+		</section>
+
+		<section>
+			<h3>Reader monad</h3>
+			<section>
+<pre><code>interface Reader&lt;R, A> {
+  (r: R): A
+}</code></pre>
+				<img src="images/smith.png">
+				<img class="img_alt" src="images/smith.png">
+			</section>
+			<section>
+<pre><code>function log(x: Result): Reader&lt;Logging, void> {...}</code></pre>
+			</section>
+		</section>
+
+		<section>
+			<h4>OOP vs FP</h4>
+			<section>
+				<h4>OOP: definition-site safety</h4>
+				<pre><code>class C {
+  ...
+  private doSmth(): void {
+    ... //safely mess with contents
+  }
+}</code></pre>
+				<h4>FP: call-site safety</h4>
+				<pre><code>doSmth(): IO&lt;string> {
+  const x: string = getString("param")
+  const y: IO&lt;number> = requestNumber()
+  ...
+}</code></code></pre>
+			</section>
+			<section>
+				<h4>OOP: definition-site safety</h4>
+				<pre><code>class C {
+  ...
+  private doSmth(): void {
+    ... //safely mess with contents
+  }
+}</code></pre>
+				<h4>FP: call-site safety</h4>
+				<pre><code>doSmth(): IO&lt;string> {
+  const x: string = getString("param")
+  const y: IO&lt;number> = requestNumber()
+  ...
+}</code></code></pre>
+				<p>use naming conventions to show side effects</p>
+			</section>
+		</section>
+
+		<section>
+			<h1>purify your functions</h1>
+			<h1>make side effects visible</h1>
+		</section>
+
+		<section>
+			<section>
+				<p>thank you</p>
+			</section>
+			<section>
+				<img src="images/surprise.gif">
+				<h3>Bonus</h3>
+			</section>
+			<section>
+				<h3>Monad Transformers</h3>
+<pre><code>interface Monad&lt;F> { //notice the F
+  of&lt;A>(x: A): F&lt;A>
+
+  flatMap&lt;A, B>(x: F&lt;A>, f: (a: A) => F&lt;B>): F&lt;B> //returns the same F
+}</code></pre>
+			</section>
+			<section>
+				<h3>Monad Transformers</h3>
+				<pre><code>interface Monad&lt;A> {
+
+  flatMap&lt;B>(f: (a: A) => Monad&lt;B>): Monad&lt;B> //returns the same Monad&lt;B>
+}</code></pre>
+				<p>there's no generic way to compose different types of wrappers</p>
+			</section>
+			<section>
+				<h3>Monad Transformers</h3>
+				<p><a href="https://gcanti.github.io/fp-ts/modules/index.ts.html#monad-transformers">eitherT, optionT, readerT...</a></p>
+				<p><a href="https://gist.github.com/gcanti/56896de8716604e3f8a75edc27f550c4">example</a></p>
+			</section>
+		</section>
+
+		<section>
+			<h3>Homework</h3>
+			<section>
+				<p>browse a functional <a href="https://github.com/gcanti/fp-ts/blob/master/examples/fp-ts-to-the-max-I.ts">repo</a> and get a taste of FP</p>
+			</section>
+			<section>
+				<s><p>browse a functional <a>repo</a> and get a taste of FP</p></s>
+				<p>look for a functional repo and get a taste of FP</p>
+			</section>
+		</section>
+
+	</div>
+
+</div>
+
+<script>
+	// Full list of configuration options available at:
+	// https://github.com/hakimel/reveal.js#configuration
+	var enableKeyboard = false;
+	Reveal.initialize({
+		controls: false,
+		keyboard: true,
+		progress: true,
+		history: true,
+		center: true,
+		width: 1260,
+		height: 900,
+		minScale: 1,
+		maxScale: 1,
+
+		transition: 'slide' // none/fade/slide/convex/concave/zoom
+	});
+
+	hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
+
