@@ -35,6 +35,49 @@
 		</section>
 
 		<section>
+			<section>
+				<ul>
+					<li>Algebraic data types</li>
+					<li>Parametric polymorphism</li>
+					<li>Type classes</li>
+					<li>Totality</li>
+					<li>Currying</li>
+					<li>GADTs</li>
+					<li>HKT</li>
+					<li>Optics</li>
+					<li>Existential types</li>
+					<li>Codata</li>
+					<li>Comonads</li>
+					<li>Free monads</li>
+					<li>Type level programming</li>
+					<li>Dependent types</li>
+					<li>Category theory</li>
+				</ul>
+			</section>
+			<section>
+				<ul>
+					<s>
+						<li>Algebraic data types</li>
+						<li>Parametric polymorphism</li>
+						<li>Type classes</li>
+						<li>Totality</li>
+						<li>Currying</li>
+						<li>GADTs</li>
+						<li>HKT</li>
+						<li>Optics</li>
+						<li>Existential types</li>
+						<li>Codata</li>
+						<li>Comonads</li>
+						<li>Free monads</li>
+						<li>Type level programming</li>
+						<li>Dependent types</li>
+						<li>Category theory</li>
+					</s>
+				</ul>
+			</section>
+		</section>
+
+		<section>
 			<h3>Programming with functions</h3>
 			<section></section>
 			<section>
@@ -243,9 +286,9 @@ function process(x: Result): void[] {...}
 readInput()().forEach(a => parse(a)).forEach(b => process(b))</code></pre>
 			</section>
 			<section>
-				<pre><code>function readInput(): string[] {...}
-function parse(x: string): Result[] {...}
-function process(x: Result): void[] {...}
+				<pre><code>function readInput(): Array&lt;string> {...}
+function parse(x: string): Array&lt;Result> {...}
+function process(x: Result): Array&lt;void> {...}
 
 const x = readInput()().flatMap(a => parse(a)).flatMap(b => process(b))</code></pre>
 			</section>
